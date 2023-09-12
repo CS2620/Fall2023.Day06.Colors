@@ -1,6 +1,7 @@
 # The program requires pillow
 # python -m pip install pillow
 from PIL import Image
+import math
 print("Start")
 
 # import Image from PIL
@@ -20,13 +21,35 @@ buffer = image.load()
 width = image.size[0]
 height = image.size[1]
 
+container = Image.new("RGB", (width*2,height*2))
+c_buffer = container.load()
+
+
 for y in range(height):
     for x in range(width):
         pixel = buffer[x, y]
 
+        # keep the original color
         r, g, b = pixel
+        c_buffer[x, y] = (r,g,b)
 
-        grayscale = (r, r, r)
-        buffer[x, y] = grayscale
+        #grayscale
+        gray = max(pixel)
+        c_buffer[x+width,y] = (gray, gray, gray)
 
-image.save("out.png", "png")
+        gray2 = math.floor((r + g + b)/3)
+        c_buffer[x,y+height] = (gray2, gray2, gray2)
+
+        gray3 = math.floor(.21*r + .72 * g + .07*b)
+        c_buffer[x+width, y + height] = (gray3, gray3, gray3)
+
+
+container.save("hi.png", "png")
+
+
+
+#image.save("out.png", "png")
+
+# for i in range(8):
+  #  image.save("out" + str(i) + ".png", "png") 
+
